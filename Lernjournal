@@ -1,0 +1,23 @@
+1. Warum reicht ein Testfall mit 50 Zeichen nicht, obwohl er «gültig» abdeckt?
+
+Ein Testfall mit 50 Zeichen deckt lediglich den Normalfall (einen Repräsentanten der gültigen Äquivalenzklasse) ab. Fehler in Software entstehen jedoch meistens an den Rändern/Grenzen von Bereichen (z. B. wenn im Code fälschlicherweise < anstelle von <= verwendet wird).   Ohne Tests der Grenzwerte (1 Zeichen als untere Grenze, 100 Zeichen als obere Grenze) sowie der ungültigen Nachbarwerte (0 Zeichen, 101 Zeichen) bleiben genau diese Grenzwertfehler im Code unentdeckt – so wie es beim Fehler im Support der Fall war.  
+
+
+2. Welche Codezeile vermuten Sie hinter dem Fehler «100 Zeichen werden abgelehnt»?
+
+Die fehlerhafte Zeile im Code lautet vermutlich:
+
+	return title.length() < MAX_TITLE_LENGTH;
+
+Erklärung: Durch den Operator < (echt kleiner als) wird ein Titel mit exakt 100 Zeichen als false (ungültig) gewertet. Um die Anforderung "1 bis 100 Zeichen" korrekt umzusetzen, müsste dort <= (kleiner oder gleich) stehen
+
+
+3. Warum gehören null und «nur Leerzeichen» in getrennte Zeilen?
+
+Es handelt sich um zwei verschiedene Spezialfälle mit unterschiedlicher technischer Natur:   
+
+null: Prüft, ob überhaupt ein Objekt/String existiert (Vermeidung einer NullPointerException).   
+
+Nur Leerzeichen (z. B. "   "): Ist ein existierendes String-Objekt mit einer Länge $> 0$, das aber inhaltsleer ist (isBlank()).   
+
+Grundsatz beim Testen: Jeder Testfall darf immer nur eine Fehlerursache bzw. Bedingung gleichzeitig prüfen. Testet man beides in einem Schritt, kann man bei einem Fehlgeschlagenen Test nicht eindeutig sagen, welche Prüfung/Logik im Code versagt hat
